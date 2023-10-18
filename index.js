@@ -58,14 +58,13 @@ async function run() {
       res.send(result);
     });
 
-    // all car info
-    // app.get("/cars/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   console.log(id);
-    //   const query = { _id: new ObjectId(id) };
-    //   const result = await carDeatilsCollection.findOne(query);
-    //   res.send(result);
-    // });
+    //get specifice one car
+    app.get("/cars/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await carDeatilsCollection.findOne(query);
+      res.send(result);
+    });
 
     //Add Car Info
     app.post("/cars", async (req, res) => {
