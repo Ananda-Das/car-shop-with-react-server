@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
 
@@ -25,6 +25,14 @@ async function run() {
 
     //Brand Name Collection
     const brandNameCollection = client.db("brandShopDB").collection("brands");
+    const carDeatilsCollection = client.db("brandShopDB").collection("cars");
+
+    //Get Brand Info
+    app.get("/brands", async (req, res) => {
+      const cursor = brandNameCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     //Add Brand Info
     app.post("/brands", async (req, res) => {
@@ -34,7 +42,38 @@ async function run() {
       res.send(result);
     });
 
+    //get specifice brands car
+    app.get("/brands/:brandName", async (req, res) => {
+      const brandName = req.params.brandName;
+      console.log(brandName);
+      const query = { brand: brandName };
+      const result = await carDeatilsCollection.find(query).toArray();
+      res.send(result);
+    });
 
+    //Get Car Info
+    app.get("/cars", async (req, res) => {
+      const cursor = carDeatilsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // all car info
+    // app.get("/cars/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   console.log(id);
+    //   const query = { _id: new ObjectId(id) };
+    //   const result = await carDeatilsCollection.findOne(query);
+    //   res.send(result);
+    // });
+
+    //Add Car Info
+    app.post("/cars", async (req, res) => {
+      const carInfo = req.body;
+      console.log(carInfo);
+      const result = await carDeatilsCollection.insertOne(carInfo);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
