@@ -51,7 +51,7 @@ async function run() {
       res.send(result);
     });
 
-    //Get Car Info
+    //Get all Car Info
     app.get("/cars", async (req, res) => {
       const cursor = carDeatilsCollection.find();
       const result = await cursor.toArray();
@@ -63,6 +63,29 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await carDeatilsCollection.findOne(query);
+      res.send(result);
+    });
+
+    //update a car
+    app.put("/cars/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedCar = req.body;
+      console.log(updatedCar);
+      const car = {
+        $set: {
+          name: updatedCar.name,
+          image: updatedCar.image,
+          brand: updatedCar.brand,
+          type: updatedCar.type,
+          price: updatedCar.price,
+          description: updatedCar.description,
+          ratting: updatedCar.ratting,
+        },
+      };
+
+      const result = await carDeatilsCollection.updateOne(filter, car, options);
       res.send(result);
     });
 
