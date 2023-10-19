@@ -26,6 +26,7 @@ async function run() {
     //Brand Name Collection
     const brandNameCollection = client.db("brandShopDB").collection("brands");
     const carDeatilsCollection = client.db("brandShopDB").collection("cars");
+    const userDeatilsCollection = client.db("brandShopDB").collection("users");
 
     //Get Brand Info
     app.get("/brands", async (req, res) => {
@@ -94,6 +95,14 @@ async function run() {
       const carInfo = req.body;
       console.log(carInfo);
       const result = await carDeatilsCollection.insertOne(carInfo);
+      res.send(result);
+    });
+
+    //for add a user
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      console.log(user);
+      const result = await userDeatilsCollection.insertOne(user);
       res.send(result);
     });
 
