@@ -27,6 +27,7 @@ async function run() {
     const brandNameCollection = client.db("brandShopDB").collection("brands");
     const carDeatilsCollection = client.db("brandShopDB").collection("cars");
     const userDeatilsCollection = client.db("brandShopDB").collection("users");
+    const cartDeatilsCollection = client.db("brandShopDB").collection("carts");
 
     //Get Brand Info
     app.get("/brands", async (req, res) => {
@@ -103,6 +104,30 @@ async function run() {
       const user = req.body;
       console.log(user);
       const result = await userDeatilsCollection.insertOne(user);
+      res.send(result);
+    });
+
+    //Get Cart Info
+    app.get("/carts", async (req, res) => {
+      const cursor = cartDeatilsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    //get specifice one user cart info
+    app.get("/carts/:user", async (req, res) => {
+      const user = req.params.user;
+      console.log(user);
+      const query = { user: user };
+      const result = await cartDeatilsCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    //for add cart
+    app.post("/carts", async (req, res) => {
+      const cart = req.body;
+      delete cart._id;
+      const result = await cartDeatilsCollection.insertOne(cart);
       res.send(result);
     });
 
