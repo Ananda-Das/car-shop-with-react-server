@@ -117,7 +117,6 @@ async function run() {
     //get specifice one user cart info
     app.get("/carts/:user", async (req, res) => {
       const user = req.params.user;
-      console.log(user);
       const query = { user: user };
       const result = await cartDeatilsCollection.find(query).toArray();
       res.send(result);
